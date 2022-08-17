@@ -8,7 +8,7 @@ def get_notices(
   y=date.today().year,
   m=date.today().month,
   d=date.today().day
-) -> dict[str, list[dict]]:
+) -> tuple[list[dict]]:
   '''
   Get notices using Kamar API.
   Return a dictionary of (type, list of notices)
@@ -46,7 +46,9 @@ def get_notices(
   meetings = result.get('MeetingNotices', {}).get('Meeting')
   general = result.get('GeneralNotices', {}).get('General')
 
-  return {
-    'meetings': meetings,
-    'general': general
-  }
+  if not isinstance(meetings, list):
+    meetings = [meetings]
+  if not isinstance(general, list):
+    general = [general]
+
+  return meetings, general

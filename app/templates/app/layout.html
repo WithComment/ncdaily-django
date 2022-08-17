@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
  <head>
@@ -9,17 +10,17 @@
    <meta name="viewport" content="width=device-width, initial-scale=1">
 
    <!--static files-->
-   <link rel="icon" href="{{ url_for('static', filename='assets/nclogo.ico') }}" type="image/x-icon" />
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/template.css') }}">
-   <link rel="stylesheet" href="{{ url_for('static', filename='css/hamburgers.css') }}">
+   <link rel="icon" href="{% static 'assets/nclogo.ico' %}" type="image/x-icon" />
+   <link rel="stylesheet" href="{% static 'css/template.css' %}">
+   <link rel="stylesheet" href="{% static 'css/hamburger.css' %}">
 
    <!--font awesome-->
    <script src="https://kit.fontawesome.com/d7450fdcd5.js" crossorigin="anonymous"></script>
 
  
   <!-- flickity  -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/flickity.css') }}">
-  <script src="{{ url_for('static', filename='js/flickity.pkgd.js') }}"></script> 
+  <link rel="stylesheet" href="{% static 'css/flickity.css' %}">
+  <script src="{% static 'js/flickity.pkgd.js' %}"></script> 
   </head>
  <body>
     <header>
@@ -54,25 +55,23 @@
 
             <!--container for the PLANE and NC DAILY-->
             <div style='display: flex; align-items: center;'>
-                <a href="{{ url_for('home') }}"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
-                <a href="{{ url_for('home') }}"><p style='margin-left: 10px; margin-bottom: 0'>NC DAILY</p></a>
+              <a href="{% url 'index' %}"><i class="fa fa-paper-plane" aria-hidden="true"></i></a>
+                <a href="{% url 'index' %}"><p style='margin-left: 10px; margin-bottom: 0'>NC DAILY</p></a>
             </div>
 
             <!--links on the nav bar-->
             <nav>
-                <a href="{{ url_for('home') }}"><li>Home</li></a>
-                <!-- <a href="{{ url_for('about') }}"><li>About</li></a> -->
-                <a href="{{ url_for('faq') }}"><li>FAQ</li></a>
-                <a href="{{ url_for('unsubscribe') }}"><li>Unsubscribe</li></a>
+                <a href="{% url 'index' %}"><li>Home</li></a>
+                <a href="{% url 'faq' %}"><li>FAQ</li></a>
+                <a href="{% url 'unsub' %}"><li>Unsubscribe</li></a>
             </nav>
         </div>
 
         <!--mobile vertical dropdown box with links-->
         <div style='display: none;' id='nav-dropdown'>
-              <a href="{{ url_for('home') }}"><li>Home</li></a>
-              <!-- <a href="{{ url_for('about') }}"><li>About</li></a> -->
-              <a href="{{ url_for('faq') }}"><li>FAQ</li></a>
-              <a href="{{ url_for('unsubscribe') }}"><li>Unsubscribe</li></a>
+              <a href="{% url 'index' %}"><li>Home</li></a>
+              <a href="{% url 'faq' %}"><li>FAQ</li></a>
+              <a href="{% url 'unsub' %}"><li>Unsubscribe</li></a>
         </div>
 
         {% block internalstyle %}

@@ -5,18 +5,17 @@
 {% block content %}
 
 <div class="textblock">
-    <form id="subscribe" method="POST" action="">
+    <form id="subscribe" method="POST" action={% url 'unsub' %}>
 
         <div style="min-width: 300px; display: flex; align-items: stretch;">
-        {% if subscribed == 'False' %}
-        <h2>You can't unsubscribe if you haven't subscribed!</h2>
-        {% elif disabled %}
-        <h2>The app is temporarily disabled. It will be up soon again though...</h2>
+        {% if message %}
+        {{ message }}
         {% else %}
         <h1>Unsubscribe</h1>
         {% endif %}
-            <input placeholder="Your email here" type="email" name= "email"/>
-            <input style="background: grey;" value="Goodbye :')" type = "submit">
+        {% csrf_token %}
+        <input placeholder="Your email here" type="email" name="email"/>
+        <input style="background: grey;" value="Goodbye :')" type = "submit">
         </div>
     </form>
 </div>

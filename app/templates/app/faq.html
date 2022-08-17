@@ -1,23 +1,14 @@
 {% extends "app/layout.html" %}
+{% load static %}
 {% block title %}
 <title>NC Daily | FAQ</title>
-<script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="textblock"><h1>Frequently Asked Questions</h1></div>
 
-<div class="masonry">
-  <div class="item"></div>
-  <div class="item"></div>
-  <div class="item"></div>
-  <div class="item"></div>
-  <div class="item"></div>
-  <div class="item"></div>
-</div>
- 
-<div class="textblock">
+
   <h1>Who helped make this app?</h1><br>
   <p>The app was made by Brandon Ru. However, obviously, the app couldn't have been done without help. Here's an incomplete list of people who have helped with the project .
 </p>
@@ -56,18 +47,14 @@
 </ul>
 </div>
 
-<script src="{{ url_for('static', filename='js/masonry-faq.js') }}"></script>
 
 <div class="textblock">
   <h1>Why was this app made?</h1>
   <br>
   <p>The goal behind this app was to streamline the way we check the notices and make it easier. We noticed a lot of students were frustrated with the current system, so we decided to take action.</p>
 </div>
-<!-- javascript -->
-<script>
-    
-    </script>
 
+ 
 <div class="textblock">
     <h1>Contact Us</h1>
     <br>
@@ -81,4 +68,7 @@
       </h2>
     </div>
 </div>
-{% endblock %}
+
+<script src="{% static 'js/flick.js' %}"></script>
+
+{% endblock content %}

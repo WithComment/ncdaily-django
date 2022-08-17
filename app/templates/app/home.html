@@ -1,5 +1,5 @@
 {% extends "app/layout.html" %}
-
+{% load static %}
 
 <!-- title block -->
 {% block title %}
@@ -8,29 +8,16 @@
 
 {% block precontent %}
 
-
-  
-  
-
-
 {% endblock %}
 <!-- content block -->
 {% block content %}
 
 
 <!-- <p id='carousel-above'>Check the notices in style. Every morning at 7.30am</p> -->
-<form id='subscribe' method="POST" action="">
+<form id='subscribe' method="POST" action={% url 'index' %}>
     <div>
-        {% if duplicate %}
-        <h2>I know you like our app, but you can't sign up twice...</h2>
-        {% elif empty %}
-        <h2>You haven't entered anything!</h2>
-        {% elif invalid_email %}
-        <h2>The email you entered is invalid!</h2>
-        {% elif disabled %}
-        <h2>Sorry, the app is currently disabled right now. It will be up soon though...</h2>
-        {% elif blocked %}
-        <h2>Please use your personal email address...</h2>
+        {% if message %}
+        <h2>{{ message }}</h2>
         {% else %}
         <h1>Get the notices via email</h1>
         {% endif %}
@@ -238,5 +225,5 @@
 
 </div>
 
-<script src="{{ url_for('static', filename='js/flick.js') }}"></script>
+<script src="{% static 'js/flick.js' %}"></script>
 {% endblock %}

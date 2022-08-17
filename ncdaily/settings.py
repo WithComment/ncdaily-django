@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_inlinecss',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +136,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Configure Django App for Heroku.
 import django_on_heroku
 django_on_heroku.settings(locals())
+
+# Email config
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST= 'smtp.gmail.com'
+EMAIL_HOST_USER= 'ncdaily@newlands.school.nz'
+EMAIL_HOST_PASSWORD= 'brandonru2022'
+
+import django
+from django.utils.encoding import smart_str
+django.utils.encoding.smart_text = smart_str

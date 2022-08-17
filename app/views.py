@@ -7,8 +7,16 @@ from app.models import Subscriber
 
 # Create your views here.
 
+DUPLICATE = "I know you like our app, but you can't sign up twice..."
+EMPTY = "You haven't entered anything!"
+INVALID_EMAIL = "The email you entered is invalid!"
+DISABLED = "Sorry, the app is currently disabled right now. It will be up soon though..."
+BLOCKED = "Please use your personal email address..."
+NOT_SUBSCRIBED = "You can't unsubscribe if you haven't subscribed!"
 
 def index(request):
+
+  num_students = Subscriber.objects.count() // 10 * 10
   
   if request.method == 'POST':
     # User submitted the subscription form
@@ -28,8 +36,9 @@ def index(request):
       # Save to database.
       subscriber.save()
   
-  else:
-    return render(request, 'app/home.html')
+  return render(request, 'app/home.html', {
+    'num_students': num_students,
+  })
 
 
 def about(request):
@@ -37,10 +46,12 @@ def about(request):
 
 
 def faq(request):
-  return render(request, 'faq.html')
+  return render(request, 'app/faq.html')
 
 
 def unsubscribe(request):
+
+  message = None
 
   if request.method == 'POST':
     # User submmitted the unsubscribe form.
@@ -49,11 +60,23 @@ def unsubscribe(request):
     
     # Validate the form.
     if form.is_valid():
-      request.session['email'] = form.cleaned_data['email']
-      return redirect(reverse(confirm_unsubscribe))
+      email = form.cleaned_data['email']
+      if Subscriber.objects.filter(email=email).exists():
+        request.session['email'] = email
+        print(111222)
+        return redirect(reverse('cm_unsub', {
+          'email': form.cleaned_data['email']
+        }))
+      
+      else:
+        message = NOT_SUBSCRIBED
+    
+    else:
+      message = INVALID_EMAIL
   
-  else:
-    return render(request, 'app/unsub.html')
+  return render(request, 'app/unsub.html', {
+    'message': message
+  })
 
 
 def confirm_unsubscribe(request):
@@ -79,4 +102,4 @@ def confirm_unsubscribe(request):
         pass
   
   # GET request, invalid form or invalid credentials
-  return render(request, 'app/confirm_unsubscribe.html')
+  return redirect(reverse('unsub'))
