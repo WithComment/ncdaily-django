@@ -63,11 +63,8 @@ def unsubscribe(request):
       email = form.cleaned_data['email']
       if Subscriber.objects.filter(email=email).exists():
         request.session['email'] = email
-        print(111222)
-        return redirect(reverse('cm_unsub', {
-          'email': form.cleaned_data['email']
-        }))
-      
+
+        return redirect(reverse('cm_unsub'))
       else:
         message = NOT_SUBSCRIBED
     
@@ -80,6 +77,7 @@ def unsubscribe(request):
 
 
 def confirm_unsubscribe(request):
+  email = request.session['email']
   if request.method == 'POST':
     form = UnsubscribeForm(request.POST)
 
@@ -102,4 +100,6 @@ def confirm_unsubscribe(request):
         pass
   
   # GET request, invalid form or invalid credentials
-  return redirect(reverse('unsub'))
+  return render(request, 'app/confirm_unsubscribe.html', {
+    'email': email
+  })

@@ -43,3 +43,6 @@ def send_notices():
     from_email=settings.EMAIL_HOST_USER,
     recipient_list=['zhangj@newlands.school.nz']
   ))
+
+def send_unsub_email(email: str):
+  

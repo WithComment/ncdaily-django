@@ -1,0 +1,87 @@
+{% load static %}
+{% load inlinecss %}
+{% inlinecss 'css/notice_email.css' %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{% now "l, M jS" %} NC Notices</title>
+</head>
+
+<body>
+
+  <header>
+    <h1>{% now "l, M jS" %}</h1>
+    <p>{{ quote }}</p>
+  </header>
+
+  <header class='new'>
+    <h1>New Notices</h1>
+  </header>
+
+  {% for notice in new_notices %}
+  <div class='notice new'>
+
+    <header>
+
+      <h2 class='title'>
+        {{ notice.level }} - {{ notice.subject }}
+      </h2>
+
+      <div class='details'>
+        {% for detail in notice.details %}
+        <p class='detail'>{{ detail }}</p>
+        {% endfor %}
+      </div>
+
+    </header>
+
+    <p>
+      {{ notice.body }}
+    </p>
+
+    <footer>
+      <a href="">TODO</a>
+    </footer>
+  
+  </div>
+  {% empty %}
+  There are no new notices today.
+  {% endfor %}
+
+  {% for notice in old_notices %}
+  <div class='notice old'>
+
+    <header>
+
+      <h2 class='title'>
+        {{ notice.level }} - {{ notice.subject }}
+      </h2>
+      <small>{{ notice.teacher }}</small>
+
+      <div class='details'>
+        {% for detail in notice.details %}
+        <p class='detail'>{{ detail }}</p>
+        {% endfor %}
+      </div>
+
+    </header>
+
+    <p>
+      {{ notice.body }}
+    </p>
+
+    <footer>
+      <a href="">TODO</a>
+    </footer>
+  
+  </div>
+  {% empty %}
+  There are no new notices today.
+  {% endfor %}
+
+</body>
+</html>
+{% endinlinecss %}
