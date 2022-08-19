@@ -1,4 +1,5 @@
 from typing import Dict, Any
+
 from django.forms import EmailField, ModelForm
 
 from app.models import Subscriber
@@ -10,6 +11,23 @@ class SubscribeForm(ModelForm):
     fields = ['email']
   
   def clean(self) -> Dict[str, Any]:
+    '''
+    Override the clean method to bypass uniqueness check.
+    Django defaults to performing uniqueness check on model instance
+    create by ModelForm which in this case is not desired.
+    '''
+    cleaned_data = self.cleaned_data
+    return cleaned_data
+
+  def clean(self) -> Dict[str, Any]:
+<<<<<<< HEAD
+=======
+    '''
+    Override the clean method to bypass uniqueness check.
+    Django defaults to performing uniqueness check on model instance
+    create by ModelForm which in this case is not desired.
+    '''
+>>>>>>> da0a820187a513c7686aa009be6d26ada131efcf
     cleaned_data = self.cleaned_data
     return cleaned_data
 
@@ -17,4 +35,4 @@ class SubscribeForm(ModelForm):
 class UnsubscribeForm(ModelForm):
   class Meta:
     model = Subscriber
-    fields = ['unsubscribe_code']
+    fields = ['unsub_code']
