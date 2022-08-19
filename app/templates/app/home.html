@@ -21,6 +21,7 @@
         {% else %}
         <h1>Get the notices via email</h1>
         {% endif %}
+        {% csrf_token %}
         <input placeholder='Your email here' type="email" name= "email"/>
         <input style='align-self: stretch;'value='Subscribe' type = "submit">
     </div>

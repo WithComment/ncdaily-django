@@ -1,7 +1,11 @@
+import asyncio
 import random
+
+from asgiref.sync import sync_to_async
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+import app.emailer as emailer
 from app.forms import SubscribeForm, UnsubscribeForm
 from app.models import Subscriber
 
@@ -25,16 +29,9 @@ def index(request):
 
     # Validate the form.
     if form.is_valid():
-
-      # Create a subscriber from form.
-      subscriber = form.save(commit=False)
-
-      # Set unsubscribe code.
-      code = random.randint(100000, 999999)
-      subscriber.unsubscribe_code = code
-
-      # Save to database.
-      subscriber.save()
+      Subscriber.objects.get_or_create(
+        email=form.cleaned_data['email']
+      )
   
   return render(request, 'app/home.html', {
     'num_students': num_students,
@@ -61,14 +58,16 @@ def unsubscribe(request):
     # Validate the form.
     if form.is_valid():
       email = form.cleaned_data['email']
-      if Subscriber.objects.filter(email=email).exists():
+      try:
+        subscriber = Subscriber.objects.get(email=email)
+        subscriber.unsub_code = random.randint(100000, 999999)
+        subscriber.save()
+
         request.session['email'] = email
-        print(111222)
-        return redirect(reverse('cm_unsub', {
-          'email': form.cleaned_data['email']
-        }))
-      
-      else:
+
+        return redirect(reverse('cm_unsub'))
+
+      except Subscriber.DoesNotExist:
         message = NOT_SUBSCRIBED
     
     else:
@@ -80,26 +79,36 @@ def unsubscribe(request):
 
 
 def confirm_unsubscribe(request):
+  email = request.session.get('email')
+  if not email:
+    return redirect(reverse('unsub'))
+  
   if request.method == 'POST':
     form = UnsubscribeForm(request.POST)
 
     if form.is_valid():
-      code = form.cleaned_data['unsubscribe_code']
+      code = form.cleaned_data['unsub_code']
+      print(code, email)
 
       try:
         # Get the subscriber using the email and the unsubscribe code.
         Subscriber.objects.get(
-          email=request.session['email'],
-          unsubscribe_code=code
+          email=email,
+          unsub_code=code
         ).delete()
 
         # Remove email from session.
         request.session.pop('email')
-        
+
         return render(request, 'app/farewell.html')
       
       except Subscriber.DoesNotExist:
         pass
   
+  elif request.method == 'GET':
+    emailer.send_unsub_mail(email)
+
   # GET request, invalid form or invalid credentials
-  return redirect(reverse('unsub'))
+  return render(request, 'app/confirm_unsubscribe.html', {
+    'email': email
+  })
