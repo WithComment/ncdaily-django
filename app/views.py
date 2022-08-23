@@ -1,5 +1,6 @@
 import random
 
+from django.db import IntegrityError
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -28,17 +29,22 @@ def index(request):
 
     # Validate the form.
     if form.is_valid():
-      Subscriber.objects.create(
-        email=form.cleaned_data['email']
-      )
 
-      
+      try:
+        # Try to create unique subscriber.
+        Subscriber.objects.create(
+          email=form.cleaned_data['email']
+        )
+      except IntegrityError:
+        # Duplicated email.
+        message = DUPLICATE
+
     else:
       message = INVALID_EMAIL
   
   return render(request, 'app/home.html', {
     'message': message,
-    'num_students': num_students,
+    'num_students': num_students
   })
 
 
