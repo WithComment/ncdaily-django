@@ -1,7 +1,5 @@
-import asyncio
 import random
 
-from asgiref.sync import sync_to_async
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
@@ -21,6 +19,7 @@ NOT_SUBSCRIBED = "You can't unsubscribe if you haven't subscribed!"
 def index(request):
 
   num_students = Subscriber.objects.count() // 10 * 10
+  message = None
   
   if request.method == 'POST':
     # User submitted the subscription form
@@ -29,11 +28,16 @@ def index(request):
 
     # Validate the form.
     if form.is_valid():
-      Subscriber.objects.get_or_create(
+      Subscriber.objects.create(
         email=form.cleaned_data['email']
       )
+
+      
+    else:
+      message = INVALID_EMAIL
   
   return render(request, 'app/home.html', {
+    'message': message,
     'num_students': num_students,
   })
 

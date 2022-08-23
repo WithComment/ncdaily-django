@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_inlinecss',
 ]
 
 MIDDLEWARE = [
@@ -143,8 +142,5 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST= 'smtp.gmail.com'
 EMAIL_HOST_USER= 'ncdaily@newlands.school.nz'
-EMAIL_HOST_PASSWORD= 'brandonru2022'
-
-import django
-from django.utils.encoding import smart_str
-django.utils.encoding.smart_text = smart_str
+EMAIL_HOST_PASSWORD = 'brandonru2022'
+DEFAULT_FROM_EMAIL = 'zhangj@newlands.school.nz'
