@@ -32,7 +32,7 @@ class BaseNotice():
     notice: Dict[str, str]
   ) -> None:
     self.subject = notice['Subject']
-    self.body = notice['Body']
+    self.body = notice['Body'].replace('\\n', '\n')
     self.level = notice['Level']
     self.teacher = notice['Teacher']
     self.details = []
@@ -40,17 +40,27 @@ class BaseNotice():
       self.details.append(notice['DateMeet'])
       self.details.append(notice['TimeMeet'])
       self.details.append(notice['PlaceMeet'])
+    
+    match self.teacher:
+      case 'ekai':
+        self.email = 'ekairuna'
+      case 'mul':
+        self.email = 'kmulholland'
+      case 'cpen':
+        self.email = 'cpenlington'
+      case _:
+        self.email = self.teacher
+    self.email += '@newlands.school.nz'
   
 
   def __hash__(self) -> int:
-    return hash(self.body)
+    return hash(self.subject)
   
 
   def __eq__(self, __o: object) -> bool:
     return (
       isinstance(__o, BaseNotice) and
-      self.subject == __o.subject and
-      self.body == __o.body
+      self.subject == __o.subject
     )
   
 
@@ -159,7 +169,6 @@ def read_notices(
   notices = Notice.objects.get(date=date).notices
   result = set()
   for n in notices:
-    print(n)
     result.add(BaseNotice(n))
   
   return result

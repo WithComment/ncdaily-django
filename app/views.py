@@ -35,6 +35,7 @@ def index(request):
         Subscriber.objects.create(
           email=form.cleaned_data['email']
         )
+        return redirect(reverse('landing'))
       except IntegrityError:
         # Duplicated email.
         message = DUPLICATE
@@ -47,6 +48,14 @@ def index(request):
     'num_students': num_students
   })
 
+
+def landing(request):
+  if 'email' not in request.session:
+    return redirect(reverse('index'))
+  else:
+    return render(request, 'app/landing.html', {
+      'email': request.session.pop('email')
+    })
 
 def about(request):
   return render(request, 'app/about.html')

@@ -1,3 +1,4 @@
+from pprint import pprint
 from typing import Sequence
 
 from django.conf import settings
@@ -26,32 +27,42 @@ def send_mass_html_mails(
   return messages.send()
 
 
-def send_notices():
+def send_notices(
+  recipients: str | list[str] = []
+) -> int:
   '''
   Send notices email to subscribers
   '''
 
-  new, old = compare_notices()  
+  # Get email content.
+  new, old = compare_notices()
+  print(f'{len(new) + len(old)} notices today, {len(new)} are new.')
   qod = get_qod()
 
   # E.g. Tuesday, Aug 23 - NC Notices
   subject = timezone.localdate().strftime('%A, %b %d - NC Notices')
 
+  # Construct email body.
   body = render_to_string('app/emails/notices.html', {
-    'quote': qod,
+    # 'quote': qod,
     'new_notices': new,
     'old_notices': old
   })
 
-  recipients = Subscriber.objects.values_list('email', flat=True)
+  if not recipients:
+    recipients = (
+      Subscriber.objects
+      .values_list('email', flat=True)
+    )
 
-  count = send_mass_html_mails(
+  if isinstance(recipients, str):
+    recipients = [recipients]
+
+  return send_mass_html_mails(
     subject=subject,
     body=body,
     recipients=recipients
   )
-
-  print(f'{count} notice emails sent.')
 
 
 def send_unsub_mail(email: str):
