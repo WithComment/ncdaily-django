@@ -30,11 +30,12 @@ def index(request):
     # Validate the form.
     if form.is_valid():
 
+      email = form.cleaned_data['email']
       try:
         # Try to create unique subscriber.
-        Subscriber.objects.create(
-          email=form.cleaned_data['email']
-        )
+        Subscriber.objects.create(email=email)
+        emailer.send_notices(email)
+        request.session['email'] = email
         return redirect(reverse('landing'))
       except IntegrityError:
         # Duplicated email.
@@ -56,6 +57,7 @@ def landing(request):
     return render(request, 'app/landing.html', {
       'email': request.session.pop('email')
     })
+
 
 def about(request):
   return render(request, 'app/about.html')
